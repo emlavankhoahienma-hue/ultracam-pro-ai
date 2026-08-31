@@ -94,7 +94,6 @@ public final class CameraEngine: NSObject, ObservableObject {
         
         let group = DispatchGroup()
         var grantedCamera = (cameraStatus == .authorized)
-        var grantedAudio = (audioStatus == .authorized)
         
         if cameraStatus == .notDetermined {
             group.enter()
@@ -106,8 +105,7 @@ public final class CameraEngine: NSObject, ObservableObject {
         
         if audioStatus == .notDetermined {
             group.enter()
-            AVCaptureDevice.requestAccess(for: .audio) { granted in
-                grantedAudio = granted
+            AVCaptureDevice.requestAccess(for: .audio) { _ in
                 group.leave()
             }
         }
@@ -206,7 +204,6 @@ public final class CameraEngine: NSObject, ObservableObject {
         photoOutput.maxPhotoQualityPrioritization = .quality
         if session.canAddOutput(photoOutput) {
             session.addOutput(photoOutput)
-            photoOutput.isHighResolutionCaptureEnabled = true
             if photoOutput.isLivePhotoCaptureSupported {
                 photoOutput.isLivePhotoCaptureEnabled = photoOutput.isLivePhotoCaptureSupported
             }

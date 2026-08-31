@@ -94,7 +94,6 @@ public struct ZoomDialView: View {
                     // Tick marks from 0.5 to 5.0
                     HStack(spacing: 8) {
                         ForEach(5...50, id: \.self) { val in
-                            let currentVal = CGFloat(val) / 10.0
                             let isMajor = (val % 10 == 0) || (val == 5)
                             
                             Rectangle()

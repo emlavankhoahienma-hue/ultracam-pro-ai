@@ -5,6 +5,38 @@ import CoreVideo
 import CoreMedia
 import UIKit
 
+// MARK: - Metal Shader Uniform Structure (32-byte layout matching UltraWideShaders.metal)
+public struct DistortionUniforms {
+    public var zoomFactor: Float           // Offset 0 (4 bytes)
+    public var distortionStrength: Float   // Offset 4 (4 bytes)
+    public var k1: Float                   // Offset 8 (4 bytes)
+    public var k2: Float                   // Offset 12 (4 bytes)
+    public var aspectRatio: Float          // Offset 16 (4 bytes)
+    public var edgeFeathering: Float       // Offset 20 (4 bytes)
+    public var vignetteIntensity: Float    // Offset 24 (4 bytes)
+    public var chromaticAberration: Float  // Offset 28 (4 bytes)
+    
+    public init(
+        zoomFactor: Float,
+        distortionStrength: Float,
+        k1: Float,
+        k2: Float,
+        aspectRatio: Float,
+        edgeFeathering: Float,
+        vignetteIntensity: Float,
+        chromaticAberration: Float
+    ) {
+        self.zoomFactor = zoomFactor
+        self.distortionStrength = distortionStrength
+        self.k1 = k1
+        self.k2 = k2
+        self.aspectRatio = aspectRatio
+        self.edgeFeathering = edgeFeathering
+        self.vignetteIntensity = vignetteIntensity
+        self.chromaticAberration = chromaticAberration
+    }
+}
+
 public final class MetalRenderer: NSObject, MTKViewDelegate {
     
     // MARK: - Metal Properties
@@ -211,7 +243,7 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
         renderPassDescriptor.colorAttachments[0].texture = outputTexture
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
         renderPassDescriptor.colorAttachments[0].storeAction = .store
-        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
+        renderPassDescriptor.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
         
         guard let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return nil }
         

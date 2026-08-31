@@ -1,12 +1,27 @@
 #include <metal_stdlib>
 #include <simd/simd.h>
-#import "ShaderTypes.h"
 
 using namespace metal;
+
+struct VertexIn {
+    float2 position;
+    float2 texCoords;
+};
 
 struct MetalVertexOut {
     float4 position [[position]];
     float2 texCoords;
+};
+
+struct DistortionUniforms {
+    float zoomFactor;           // Range: 0.5 to 5.0 (Shader active when < 1.0)
+    float distortionStrength;   // Distortion curvature factor (default: ~0.45)
+    float k1;                   // Primary barrel coefficient (default: -0.28)
+    float k2;                   // Secondary barrel coefficient (default: 0.08)
+    float aspectRatio;          // Frame width / height ratio
+    float edgeFeathering;       // Border transition smoothing (0.0 to 1.0)
+    float vignetteIntensity;    // Corner vignette correction (0.0 to 1.0)
+    float chromaticAberration;  // RGB channel dispersion correction
 };
 
 // MARK: - Vertex Shader

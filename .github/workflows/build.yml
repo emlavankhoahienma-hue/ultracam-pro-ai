@@ -28,15 +28,15 @@ jobs:
 
       - name: Build Xcode Archive (Unsigned)
         run: |
-          xcodebuild archive \
+          xcodebuild clean archive \
             -project UltraCamPro.xcodeproj \
             -scheme UltraCamPro \
             -configuration Release \
             -destination "generic/platform=iOS" \
             -archivePath "build/UltraCamPro.xcarchive" \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
             ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS=NO
 
       - name: Package Payload into IPA
