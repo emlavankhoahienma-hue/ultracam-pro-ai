@@ -1,0 +1,451 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA0000012C12345678900001 /* UltraCamProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900001 /* UltraCamProApp.swift */; };
+		AA0000012C12345678900004 /* UltraWideShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900004 /* UltraWideShaders.metal */; };
+		AA0000012C12345678900005 /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900005 /* MetalRenderer.swift */; };
+		AA0000012C12345678900006 /* MetalCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900006 /* MetalCameraView.swift */; };
+		AA0000012C12345678900007 /* CameraEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900007 /* CameraEngine.swift */; };
+		AA0000012C12345678900008 /* AITrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900008 /* AITrackingManager.swift */; };
+		AA0000012C12345678900009 /* AIFocusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900009 /* AIFocusController.swift */; };
+		AA0000012C12345678900010 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900010 /* HapticManager.swift */; };
+		AA0000012C12345678900011 /* OrientationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900011 /* OrientationManager.swift */; };
+		AA0000012C12345678900012 /* FaceBoundingBoxOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900012 /* FaceBoundingBoxOverlay.swift */; };
+		AA0000012C12345678900013 /* ZoomDialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900013 /* ZoomDialView.swift */; };
+		AA0000012C12345678900014 /* TopBarControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900014 /* TopBarControlsView.swift */; };
+		AA0000012C12345678900015 /* BottomBarControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900015 /* BottomBarControlsView.swift */; };
+		AA0000012C12345678900016 /* SettingsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900016 /* SettingsSheetView.swift */; };
+		AA0000012C12345678900017 /* CameraMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900017 /* CameraMainView.swift */; };
+		AA0000012C12345678900018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900018 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA0000032C12345678900001 /* UltraCamPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UltraCamPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000022C12345678900001 /* UltraCamProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraCamProApp.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA0000022C12345678900003 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
+		AA0000022C12345678900004 /* UltraWideShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = UltraWideShaders.metal; sourceTree = "<group>"; };
+		AA0000022C12345678900005 /* MetalRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900006 /* MetalCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalCameraView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900007 /* CameraEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEngine.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900008 /* AITrackingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITrackingManager.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900009 /* AIFocusController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIFocusController.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900010 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900011 /* OrientationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationManager.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900012 /* FaceBoundingBoxOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceBoundingBoxOverlay.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900013 /* ZoomDialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomDialView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900014 /* TopBarControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarControlsView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900015 /* BottomBarControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBarControlsView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900016 /* SettingsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheetView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900017 /* CameraMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraMainView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900018 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA0000042C12345678900001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA0000052C12345678900001 = {
+			isa = PBXGroup;
+			children = (
+				AA0000052C12345678900002 /* UltraCamPro */,
+				AA0000052C12345678900007 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900002 /* UltraCamPro */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000052C12345678900003 /* App */,
+				AA0000052C12345678900004 /* Shaders */,
+				AA0000052C12345678900005 /* Engine */,
+				AA0000052C12345678900006 /* AI */,
+				AA0000052C12345678900008 /* UI */,
+				AA0000022C12345678900018 /* Assets.xcassets */,
+			);
+			path = UltraCamPro;
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900003 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000022C12345678900001 /* UltraCamProApp.swift */,
+				AA0000022C12345678900002 /* Info.plist */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900004 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000022C12345678900003 /* ShaderTypes.h */,
+				AA0000022C12345678900004 /* UltraWideShaders.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900005 /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000022C12345678900005 /* MetalRenderer.swift */,
+				AA0000022C12345678900006 /* MetalCameraView.swift */,
+				AA0000022C12345678900007 /* CameraEngine.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900006 /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000022C12345678900008 /* AITrackingManager.swift */,
+				AA0000022C12345678900009 /* AIFocusController.swift */,
+			);
+			path = AI;
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900008 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000022C12345678900017 /* CameraMainView.swift */,
+				AA0000052C12345678900009 /* Components */,
+				AA0000052C12345678900010 /* Utilities */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900009 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000022C12345678900012 /* FaceBoundingBoxOverlay.swift */,
+				AA0000022C12345678900013 /* ZoomDialView.swift */,
+				AA0000022C12345678900014 /* TopBarControlsView.swift */,
+				AA0000022C12345678900015 /* BottomBarControlsView.swift */,
+				AA0000022C12345678900016 /* SettingsSheetView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900010 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000022C12345678900010 /* HapticManager.swift */,
+				AA0000022C12345678900011 /* OrientationManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		AA0000052C12345678900007 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000032C12345678900001 /* UltraCamPro.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA0000062C12345678900001 /* UltraCamPro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA0000072C12345678900001 /* Build configuration list for PBXNativeTarget "UltraCamPro" */;
+			buildPhases = (
+				AA0000082C12345678900001 /* Sources */,
+				AA0000042C12345678900001 /* Frameworks */,
+				AA0000092C12345678900001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UltraCamPro;
+			productName = UltraCamPro;
+			productReference = AA0000032C12345678900001 /* UltraCamPro.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA00000A2C12345678900001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					AA0000062C12345678900001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = AA00000B2C12345678900001 /* Build configuration list for PBXProject "UltraCamPro" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA0000052C12345678900001;
+			productRefGroup = AA0000052C12345678900007 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA0000062C12345678900001 /* UltraCamPro */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA0000092C12345678900001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000012C12345678900018 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA0000082C12345678900001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA0000012C12345678900001 /* UltraCamProApp.swift in Sources */,
+				AA0000012C12345678900004 /* UltraWideShaders.metal in Sources */,
+				AA0000012C12345678900005 /* MetalRenderer.swift in Sources */,
+				AA0000012C12345678900006 /* MetalCameraView.swift in Sources */,
+				AA0000012C12345678900007 /* CameraEngine.swift in Sources */,
+				AA0000012C12345678900008 /* AITrackingManager.swift in Sources */,
+				AA0000012C12345678900009 /* AIFocusController.swift in Sources */,
+				AA0000012C12345678900010 /* HapticManager.swift in Sources */,
+				AA0000012C12345678900011 /* OrientationManager.swift in Sources */,
+				AA0000012C12345678900012 /* FaceBoundingBoxOverlay.swift in Sources */,
+				AA0000012C12345678900013 /* ZoomDialView.swift in Sources */,
+				AA0000012C12345678900014 /* TopBarControlsView.swift in Sources */,
+				AA0000012C12345678900015 /* BottomBarControlsView.swift in Sources */,
+				AA0000012C12345678900016 /* SettingsSheetView.swift in Sources */,
+				AA0000012C12345678900017 /* CameraMainView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA00000C2C12345678900001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDEFINED_VARIABLES = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA00000C2C12345678900002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDEFINED_VARIABLES = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AA00000D2C12345678900001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = UltraCamPro/App/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ultracam.pro;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA00000D2C12345678900002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = UltraCamPro/App/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ultracam.pro;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA00000B2C12345678900001 /* Build configuration list for PBXProject "UltraCamPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000C2C12345678900001 /* Debug */,
+				AA00000C2C12345678900002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA0000072C12345678900001 /* Build configuration list for PBXNativeTarget "UltraCamPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA00000D2C12345678900001 /* Debug */,
+				AA00000D2C12345678900002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = AA00000A2C12345678900001 /* Project object */;
+}
