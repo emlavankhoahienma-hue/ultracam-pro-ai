@@ -8,55 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		AA0000012C12345678900001 /* UltraCamProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900001 /* UltraCamProApp.swift */; };
-		AA0000012C12345678900004 /* UltraWideShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900004 /* UltraWideShaders.metal */; };
-		AA0000012C12345678900005 /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900005 /* MetalRenderer.swift */; };
-		AA0000012C12345678900006 /* MetalCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900006 /* MetalCameraView.swift */; };
-		AA0000012C12345678900007 /* CameraEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900007 /* CameraEngine.swift */; };
-		AA0000012C12345678900008 /* AITrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900008 /* AITrackingManager.swift */; };
-		AA0000012C12345678900009 /* AIFocusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900009 /* AIFocusController.swift */; };
-		AA0000012C12345678900010 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900010 /* HapticManager.swift */; };
-		AA0000012C12345678900011 /* OrientationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900011 /* OrientationManager.swift */; };
-		AA0000012C12345678900012 /* FaceBoundingBoxOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900012 /* FaceBoundingBoxOverlay.swift */; };
-		AA0000012C12345678900013 /* ZoomDialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900013 /* ZoomDialView.swift */; };
-		AA0000012C12345678900014 /* TopBarControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900014 /* TopBarControlsView.swift */; };
-		AA0000012C12345678900015 /* BottomBarControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900015 /* BottomBarControlsView.swift */; };
-		AA0000012C12345678900016 /* SettingsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900016 /* SettingsSheetView.swift */; };
-		AA0000012C12345678900017 /* CameraMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900017 /* CameraMainView.swift */; };
-		AA0000012C12345678900018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900018 /* Assets.xcassets */; };
-		AA0000012C12345678900019 /* CinematicEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900019 /* CinematicEngine.swift */; };
-		AA0000012C12345678900020 /* LUTEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900020 /* LUTEngine.swift */; };
-		AA0000012C12345678900021 /* AIEraser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900021 /* AIEraser.swift */; };
-		AA0000012C12345678900022 /* CameraModeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900022 /* CameraModeSelectorView.swift */; };
-		AA0000012C12345678900023 /* LUTSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900023 /* LUTSelectorView.swift */; };
-		AA0000012C12345678900024 /* GalleryEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900024 /* GalleryEditorView.swift */; };
+		AA0000012C12345678900002 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900002 /* CameraManager.swift */; };
+		AA0000012C12345678900003 /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900003 /* CameraPreviewView.swift */; };
+		AA0000012C12345678900004 /* FaceTrackingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900004 /* FaceTrackingEngine.swift */; };
+		AA0000012C12345678900005 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900005 /* HapticManager.swift */; };
+		AA0000012C12345678900006 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900006 /* CameraView.swift */; };
+		AA0000012C12345678900007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000022C12345678900007 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AA0000032C12345678900001 /* UltraCamPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UltraCamPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0000022C12345678900001 /* UltraCamProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraCamProApp.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AA0000022C12345678900003 /* ShaderTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
-		AA0000022C12345678900004 /* UltraWideShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = UltraWideShaders.metal; sourceTree = "<group>"; };
-		AA0000022C12345678900005 /* MetalRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900006 /* MetalCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalCameraView.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900007 /* CameraEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraEngine.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900008 /* AITrackingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AITrackingManager.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900009 /* AIFocusController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIFocusController.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900010 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900011 /* OrientationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationManager.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900012 /* FaceBoundingBoxOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceBoundingBoxOverlay.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900013 /* ZoomDialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomDialView.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900014 /* TopBarControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarControlsView.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900015 /* BottomBarControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBarControlsView.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900016 /* SettingsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheetView.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900017 /* CameraMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraMainView.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900018 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		AA0000022C12345678900019 /* CinematicEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CinematicEngine.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900020 /* LUTEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTEngine.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900021 /* AIEraser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIEraser.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900022 /* CameraModeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraModeSelectorView.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900023 /* LUTSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LUTSelectorView.swift; sourceTree = "<group>"; };
-		AA0000022C12345678900024 /* GalleryEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryEditorView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA0000022C12345678900002 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900003 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900004 /* FaceTrackingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceTrackingEngine.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900005 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900006 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		AA0000022C12345678900007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,11 +51,9 @@
 			isa = PBXGroup;
 			children = (
 				AA0000052C12345678900003 /* App */,
-				AA0000052C12345678900004 /* Shaders */,
-				AA0000052C12345678900005 /* Engine */,
-				AA0000052C12345678900006 /* AI */,
-				AA0000052C12345678900008 /* UI */,
-				AA0000022C12345678900018 /* Assets.xcassets */,
+				AA0000052C12345678900004 /* Core */,
+				AA0000052C12345678900005 /* UI */,
+				AA0000022C12345678900007 /* Assets.xcassets */,
 			);
 			path = UltraCamPro;
 			sourceTree = "<group>";
@@ -95,74 +62,28 @@
 			isa = PBXGroup;
 			children = (
 				AA0000022C12345678900001 /* UltraCamProApp.swift */,
-				AA0000022C12345678900002 /* Info.plist */,
+				AA0000022C12345678900008 /* Info.plist */,
 			);
 			path = App;
 			sourceTree = "<group>";
 		};
-		AA0000052C12345678900004 /* Shaders */ = {
+		AA0000052C12345678900004 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				AA0000022C12345678900003 /* ShaderTypes.h */,
-				AA0000022C12345678900004 /* UltraWideShaders.metal */,
+				AA0000022C12345678900002 /* CameraManager.swift */,
+				AA0000022C12345678900003 /* CameraPreviewView.swift */,
+				AA0000022C12345678900004 /* FaceTrackingEngine.swift */,
+				AA0000022C12345678900005 /* HapticManager.swift */,
 			);
-			path = Shaders;
+			path = Core;
 			sourceTree = "<group>";
 		};
-		AA0000052C12345678900005 /* Engine */ = {
+		AA0000052C12345678900005 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				AA0000022C12345678900005 /* MetalRenderer.swift */,
-				AA0000022C12345678900006 /* MetalCameraView.swift */,
-				AA0000022C12345678900007 /* CameraEngine.swift */,
-				AA0000022C12345678900019 /* CinematicEngine.swift */,
-				AA0000022C12345678900020 /* LUTEngine.swift */,
-				AA0000022C12345678900021 /* AIEraser.swift */,
-			);
-			path = Engine;
-			sourceTree = "<group>";
-		};
-		AA0000052C12345678900006 /* AI */ = {
-			isa = PBXGroup;
-			children = (
-				AA0000022C12345678900008 /* AITrackingManager.swift */,
-				AA0000022C12345678900009 /* AIFocusController.swift */,
-			);
-			path = AI;
-			sourceTree = "<group>";
-		};
-		AA0000052C12345678900008 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				AA0000022C12345678900017 /* CameraMainView.swift */,
-				AA0000052C12345678900009 /* Components */,
-				AA0000052C12345678900010 /* Utilities */,
+				AA0000022C12345678900006 /* CameraView.swift */,
 			);
 			path = UI;
-			sourceTree = "<group>";
-		};
-		AA0000052C12345678900009 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				AA0000022C12345678900012 /* FaceBoundingBoxOverlay.swift */,
-				AA0000022C12345678900013 /* ZoomDialView.swift */,
-				AA0000022C12345678900014 /* TopBarControlsView.swift */,
-				AA0000022C12345678900015 /* BottomBarControlsView.swift */,
-				AA0000022C12345678900016 /* SettingsSheetView.swift */,
-				AA0000022C12345678900022 /* CameraModeSelectorView.swift */,
-				AA0000022C12345678900023 /* LUTSelectorView.swift */,
-				AA0000022C12345678900024 /* GalleryEditorView.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		AA0000052C12345678900010 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-				AA0000022C12345678900010 /* HapticManager.swift */,
-				AA0000022C12345678900011 /* OrientationManager.swift */,
-			);
-			path = Utilities;
 			sourceTree = "<group>";
 		};
 		AA0000052C12345678900007 /* Products */ = {
@@ -231,7 +152,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA0000012C12345678900018 /* Assets.xcassets in Resources */,
+				AA0000012C12345678900007 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,26 +164,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0000012C12345678900001 /* UltraCamProApp.swift in Sources */,
-				AA0000012C12345678900004 /* UltraWideShaders.metal in Sources */,
-				AA0000012C12345678900005 /* MetalRenderer.swift in Sources */,
-				AA0000012C12345678900006 /* MetalCameraView.swift in Sources */,
-				AA0000012C12345678900007 /* CameraEngine.swift in Sources */,
-				AA0000012C12345678900008 /* AITrackingManager.swift in Sources */,
-				AA0000012C12345678900009 /* AIFocusController.swift in Sources */,
-				AA0000012C12345678900010 /* HapticManager.swift in Sources */,
-				AA0000012C12345678900011 /* OrientationManager.swift in Sources */,
-				AA0000012C12345678900012 /* FaceBoundingBoxOverlay.swift in Sources */,
-				AA0000012C12345678900013 /* ZoomDialView.swift in Sources */,
-				AA0000012C12345678900014 /* TopBarControlsView.swift in Sources */,
-				AA0000012C12345678900015 /* BottomBarControlsView.swift in Sources */,
-				AA0000012C12345678900016 /* SettingsSheetView.swift in Sources */,
-				AA0000012C12345678900017 /* CameraMainView.swift in Sources */,
-				AA0000012C12345678900019 /* CinematicEngine.swift in Sources */,
-				AA0000012C12345678900020 /* LUTEngine.swift in Sources */,
-				AA0000012C12345678900021 /* AIEraser.swift in Sources */,
-				AA0000012C12345678900022 /* CameraModeSelectorView.swift in Sources */,
-				AA0000012C12345678900023 /* LUTSelectorView.swift in Sources */,
-				AA0000012C12345678900024 /* GalleryEditorView.swift in Sources */,
+				AA0000012C12345678900002 /* CameraManager.swift in Sources */,
+				AA0000012C12345678900003 /* CameraPreviewView.swift in Sources */,
+				AA0000012C12345678900004 /* FaceTrackingEngine.swift in Sources */,
+				AA0000012C12345678900005 /* HapticManager.swift in Sources */,
+				AA0000012C12345678900006 /* CameraView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,8 +227,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -376,8 +280,6 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -407,7 +309,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ultracam.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -438,7 +340,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ultracam.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

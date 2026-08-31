@@ -4,7 +4,7 @@ import SwiftUI
 struct UltraCamProApp: App {
     var body: some Scene {
         WindowGroup {
-            CameraMainView()
+            CameraView()
                 .preferredColorScheme(.dark)
                 .statusBar(hidden: true)
         }
