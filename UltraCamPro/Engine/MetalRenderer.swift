@@ -5,7 +5,7 @@ import CoreVideo
 import CoreMedia
 import UIKit
 
-// MARK: - Metal Shader Uniform Structure (32-byte layout matching UltraWideShaders.metal)
+// MARK: - Metal Shader Uniform Structure (48-byte layout matching UltraWideShaders.metal)
 public struct DistortionUniforms {
     public var zoomFactor: Float           // Offset 0 (4 bytes)
     public var distortionStrength: Float   // Offset 4 (4 bytes)
@@ -15,6 +15,10 @@ public struct DistortionUniforms {
     public var edgeFeathering: Float       // Offset 20 (4 bytes)
     public var vignetteIntensity: Float    // Offset 24 (4 bytes)
     public var chromaticAberration: Float  // Offset 28 (4 bytes)
+    public var lutPresetIndex: Int32       // Offset 32 (4 bytes)
+    public var lutIntensity: Float         // Offset 36 (4 bytes)
+    public var cinematicBlurRadius: Float  // Offset 40 (4 bytes)
+    public var hasSegmentationMask: Int32  // Offset 44 (4 bytes)
     
     public init(
         zoomFactor: Float,
@@ -24,7 +28,11 @@ public struct DistortionUniforms {
         aspectRatio: Float,
         edgeFeathering: Float,
         vignetteIntensity: Float,
-        chromaticAberration: Float
+        chromaticAberration: Float,
+        lutPresetIndex: Int32 = 0,
+        lutIntensity: Float = 1.0,
+        cinematicBlurRadius: Float = 0.0,
+        hasSegmentationMask: Int32 = 0
     ) {
         self.zoomFactor = zoomFactor
         self.distortionStrength = distortionStrength
@@ -34,6 +42,10 @@ public struct DistortionUniforms {
         self.edgeFeathering = edgeFeathering
         self.vignetteIntensity = vignetteIntensity
         self.chromaticAberration = chromaticAberration
+        self.lutPresetIndex = lutPresetIndex
+        self.lutIntensity = lutIntensity
+        self.cinematicBlurRadius = cinematicBlurRadius
+        self.hasSegmentationMask = hasSegmentationMask
     }
 }
 
@@ -49,6 +61,7 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
     // MARK: - Frame State
     private let frameLock = NSLock()
     private var currentPixelBuffer: CVPixelBuffer?
+    private var currentMaskBuffer: CVPixelBuffer?
     
     // MARK: - Shader Parameters
     public var zoomFactor: Float = 1.0
@@ -57,6 +70,11 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
     public var k2: Float = 0.12
     public var vignetteIntensity: Float = 0.35
     public var chromaticAberration: Float = 0.003
+    
+    // Pro Features Parameters
+    public var lutPresetIndex: Int32 = 0
+    public var lutIntensity: Float = 1.0
+    public var cinematicBlurRadius: Float = 0.0
     
     // Quad Vertices for Fullscreen Pass (Clip Space & UV)
     private struct Vertex {
@@ -104,7 +122,7 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
         let fragmentFunction = defaultLibrary.makeFunction(name: "ultraWideFragmentShader")
         
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
-        pipelineDescriptor.label = "UltraCam Barrel Pipeline"
+        pipelineDescriptor.label = "UltraCam Barrel & Pro Pipeline"
         pipelineDescriptor.vertexFunction = vertexFunction
         pipelineDescriptor.fragmentFunction = fragmentFunction
         pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
@@ -128,9 +146,15 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
         frameLock.unlock()
     }
     
+    public func updateMaskBuffer(_ maskBuffer: CVPixelBuffer?) {
+        frameLock.lock()
+        self.currentMaskBuffer = maskBuffer
+        frameLock.unlock()
+    }
+    
     // MARK: - MTKViewDelegate
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        // Handle view resize if needed
+        // View resized
     }
     
     public func draw(in view: MTKView) {
@@ -139,6 +163,7 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
             frameLock.unlock()
             return
         }
+        let maskBuffer = currentMaskBuffer
         CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
         defer {
             CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
@@ -180,6 +205,29 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
         encoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         encoder.setFragmentTexture(inputTexture, index: 0)
         
+        // Bind Segmentation Mask Texture (if available)
+        var hasMask: Int32 = 0
+        if let maskBuf = maskBuffer {
+            var cvMaskTexture: CVMetalTexture?
+            let maskWidth = CVPixelBufferGetWidth(maskBuf)
+            let maskHeight = CVPixelBufferGetHeight(maskBuf)
+            let maskStatus = CVMetalTextureCacheCreateTextureFromImage(
+                kCFAllocatorDefault,
+                textureCache,
+                maskBuf,
+                nil,
+                .r8Unorm,
+                maskWidth,
+                maskHeight,
+                0,
+                &cvMaskTexture
+            )
+            if maskStatus == kCVReturnSuccess, let mTex = cvMaskTexture, let maskTexture = CVMetalTextureGetTexture(mTex) {
+                encoder.setFragmentTexture(maskTexture, index: 1)
+                hasMask = 1
+            }
+        }
+        
         let aspect = Float(view.drawableSize.width / max(1.0, view.drawableSize.height))
         var uniforms = DistortionUniforms(
             zoomFactor: self.zoomFactor,
@@ -189,7 +237,11 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
             aspectRatio: aspect,
             edgeFeathering: 0.02,
             vignetteIntensity: self.vignetteIntensity,
-            chromaticAberration: self.chromaticAberration
+            chromaticAberration: self.chromaticAberration,
+            lutPresetIndex: self.lutPresetIndex,
+            lutIntensity: self.lutIntensity,
+            cinematicBlurRadius: self.cinematicBlurRadius,
+            hasSegmentationMask: hasMask
         )
         
         encoder.setFragmentBytes(&uniforms, length: MemoryLayout<DistortionUniforms>.stride, index: 0)
@@ -200,7 +252,7 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
         commandBuffer.commit()
     }
     
-    // MARK: - Process Rendered Image for Photo Capture (0.5x Ultra-Wide)
+    // MARK: - Process Rendered Image for Photo Capture (0.5x Ultra-Wide & LUTs)
     public func renderProcessedImage(from pixelBuffer: CVPixelBuffer) -> UIImage? {
         let width = CVPixelBufferGetWidth(pixelBuffer)
         let height = CVPixelBufferGetHeight(pixelBuffer)
@@ -259,7 +311,11 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
             aspectRatio: Float(width) / Float(height),
             edgeFeathering: 0.02,
             vignetteIntensity: self.vignetteIntensity,
-            chromaticAberration: self.chromaticAberration
+            chromaticAberration: self.chromaticAberration,
+            lutPresetIndex: self.lutPresetIndex,
+            lutIntensity: self.lutIntensity,
+            cinematicBlurRadius: self.cinematicBlurRadius,
+            hasSegmentationMask: 0
         )
         
         encoder.setFragmentBytes(&uniforms, length: MemoryLayout<DistortionUniforms>.stride, index: 0)
@@ -289,6 +345,6 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
             return nil
         }
         
-        return UIImage(cgImage: cgImage, scale: 1.0, orientation: .right)
+        return UIImage(cgImage: cgImage, scale: 1.0, orientation: .up)
     }
 }

@@ -34,7 +34,7 @@ public final class AITrackingManager: ObservableObject {
     public init() {}
     
     // MARK: - High Performance Neural Engine Face Detection Pipeline
-    public func processFrame(_ pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation = .right) {
+    public func processFrame(_ pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation = .up) {
         guard isAITrackingEnabled else {
             if !detectedFaces.isEmpty {
                 DispatchQueue.main.async {
@@ -109,10 +109,10 @@ public final class AITrackingManager: ObservableObject {
         // Calculate primary focus point for AVFoundation FocusPointOfInterest
         var computedFocusPoint: CGPoint? = nil
         if let primary = updatedFaces.first {
-            // Convert Vision coordinate (bottom-left origin) to AVCaptureDevice normalized space (top-left origin, swapped for orientation)
+            // Convert Vision coordinate (bottom-left origin) to AVCaptureDevice normalized space (top-left origin)
             let centerX = primary.boundingBox.midX
-            let centerY = 1.0 - primary.boundingBox.midY
-            computedFocusPoint = CGPoint(x: centerY, y: 1.0 - centerX)
+            let centerY = primary.boundingBox.midY
+            computedFocusPoint = CGPoint(x: centerX, y: 1.0 - centerY)
         }
         
         DispatchQueue.main.async {

@@ -4,12 +4,15 @@ public struct CameraMainView: View {
     @StateObject private var cameraEngine = CameraEngine()
     @StateObject private var trackingManager = AITrackingManager()
     @StateObject private var orientationManager = OrientationManager()
+    @StateObject private var cinematicEngine = CinematicEngine()
+    @StateObject private var lutEngine = LUTEngine()
     
     @State private var metalRenderer: MetalRenderer?
     @State private var focusController: AIFocusController?
     
     // UI State
     @State private var showSettings: Bool = false
+    @State private var showGalleryEditor: Bool = false
     @State private var showGrid: Bool = false
     @State private var showFlashAnimation: Bool = false
     @State private var manualFocusPoint: CGPoint? = nil
@@ -22,91 +25,54 @@ public struct CameraMainView: View {
     
     public var body: some View {
         ZStack {
-            Color.black.edgesIgnoringSafeArea(.all)
+            Color.black.ignoresSafeArea()
             
+            // MARK: - LAYER 0: Viewfinder & AI Overlays
             GeometryReader { geo in
                 let viewSize = geo.size
                 
                 ZStack {
-                    // MARK: - Metal Viewfinder Live Feed
+                    // Metal Live Camera View
                     if let renderer = metalRenderer {
                         MetalCameraView(renderer: renderer)
                             .frame(width: viewSize.width, height: viewSize.height)
                             .clipped()
                     }
                     
-                    // MARK: - Composition 3x3 Grid
+                    // Composition 3x3 Grid Overlay
                     if showGrid {
                         CameraGridView()
                             .allowsHitTesting(false)
                     }
                     
-                    // MARK: - AI Neural Engine Face Tracking Overlay
+                    // AI Neural Engine Face Tracking Boxes
                     FaceBoundingBoxOverlay(
                         faces: trackingManager.detectedFaces,
                         viewSize: viewSize
                     )
                     
-                    // MARK: - Manual Tap Focus Box Reticle
+                    // Manual Tap Focus Box Reticle
                     if showManualFocusBox, let point = manualFocusPoint {
                         ManualFocusReticleView()
                             .position(point)
                             .transition(.opacity)
                     }
                     
-                    // MARK: - White Shutter Flash Effect
+                    // White Shutter Flash Animation
                     if showFlashAnimation {
                         Color.white
                             .opacity(0.85)
-                            .edgesIgnoringSafeArea(.all)
+                            .ignoresSafeArea()
                             .transition(.opacity)
-                    }
-                    
-                    // MARK: - HUD Controls Overlay
-                    VStack(spacing: 0) {
-                        // Top Bar
-                        TopBarControlsView(
-                            cameraEngine: cameraEngine,
-                            trackingManager: trackingManager,
-                            onOpenSettings: { showSettings = true }
-                        )
-                        .padding(.top, geo.safeAreaInsets.top)
-                        
-                        Spacer()
-                        
-                        // Zoom Dial & Buttons
-                        ZoomDialView(
-                            zoomFactor: $cameraEngine.currentZoomFactor,
-                            onZoomChanged: { newZoom in
-                                cameraEngine.setZoomFactor(newZoom, animated: true)
-                            }
-                        )
-                        .padding(.bottom, 16)
-                        
-                        // Bottom Bar
-                        BottomBarControlsView(
-                            cameraEngine: cameraEngine,
-                            onShutterTap: handleShutterTap,
-                            onFlipCamera: { cameraEngine.toggleCameraPosition() },
-                            onOpenGallery: { /* Opens system photo library */ }
-                        )
                     }
                 }
                 .contentShape(Rectangle())
-                // MARK: - Gestures: Tap to Focus & Pinch to Zoom
-                .simultaneousGesture(
-                    TapGesture()
-                        .onEnded {
-                            // Handled by spatial tap
-                        }
-                )
-                .highPriorityGesture(
-                    SpatialTapGesture()
-                        .onEnded { value in
-                            handleManualTapFocus(at: value.location, in: viewSize)
-                        }
-                )
-                .simultaneousGesture(
+                // Tap to focus ONLY on background viewfinder
+                .onTapGesture { location in
+                    handleManualTapFocus(at: location, in: viewSize)
+                }
+                // Pinch to zoom gesture on viewfinder
+                .gesture(
                     MagnificationGesture()
                         .onChanged { scale in
                             let targetZoom = max(0.5, min(5.0, baseZoomFactor * scale))
@@ -117,7 +83,81 @@ public struct CameraMainView: View {
                         }
                 )
             }
-            .edgesIgnoringSafeArea(.all)
+            .ignoresSafeArea()
+            
+            // MARK: - LAYER 1: HUD Controls Overlay (zIndex: 100 to guarantee touch priority)
+            VStack(spacing: 0) {
+                // Top Utility Bar with Safe Area protection
+                TopBarControlsView(
+                    cameraEngine: cameraEngine,
+                    trackingManager: trackingManager,
+                    cinematicEngine: cinematicEngine,
+                    lutEngine: lutEngine,
+                    onOpenSettings: { showSettings = true }
+                )
+                .padding(.top, 8)
+                
+                // Cinematic Aperture Slider (shown when Cinematic is active)
+                if cinematicEngine.isCinematicEnabled {
+                    HStack(spacing: 12) {
+                        Text(String(format: "ƒ/%.1f", cinematicEngine.currentAperture))
+                            .font(.system(size: 14, weight: .bold, design: .serif))
+                            .foregroundColor(.yellow)
+                            .frame(width: 50)
+                        
+                        Slider(value: $cinematicEngine.currentAperture, in: 1.4...16.0, step: 0.2) { _ in
+                            cinematicEngine.setAperture(cinematicEngine.currentAperture)
+                            metalRenderer?.cinematicBlurRadius = cinematicEngine.blurRadius
+                        }
+                        .accentColor(.yellow)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 6)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(20)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 4)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                
+                // 3D Film LUT Preset Selector Carousel (shown when LUT panel is open)
+                if lutEngine.isLUTPanelOpen {
+                    LUTSelectorView(lutEngine: lutEngine) { preset in
+                        metalRenderer?.lutPresetIndex = Int32(preset.rawValue)
+                    }
+                    .padding(.top, 8)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                
+                Spacer()
+                
+                // Floating Zoom Dial Capsule
+                ZoomDialView(
+                    zoomFactor: $cameraEngine.currentZoomFactor,
+                    onZoomChanged: { newZoom in
+                        cameraEngine.setZoomFactor(newZoom, animated: true)
+                    }
+                )
+                .padding(.bottom, 12)
+                
+                // Camera Mode Swipe Carousel
+                CameraModeSelectorView(
+                    selectedMode: $cameraEngine.currentMode,
+                    onModeChanged: { mode in
+                        handleModeChange(mode)
+                    }
+                )
+                .padding(.bottom, 8)
+                
+                // Bottom Bar: Shutter, Gallery, Flip Camera
+                BottomBarControlsView(
+                    cameraEngine: cameraEngine,
+                    onShutterTap: handleShutterTap,
+                    onFlipCamera: { cameraEngine.toggleCameraPosition() },
+                    onOpenGallery: { showGalleryEditor = true }
+                )
+            }
+            .zIndex(100)
         }
         .sheet(isPresented: $showSettings) {
             SettingsSheetView(
@@ -126,6 +166,9 @@ public struct CameraMainView: View {
                 metalRenderer: metalRenderer,
                 showGrid: $showGrid
             )
+        }
+        .sheet(isPresented: $showGalleryEditor) {
+            GalleryEditorView(initialImage: cameraEngine.lastCapturedThumbnail)
         }
         .onAppear {
             initializeCameraPipeline()
@@ -144,8 +187,13 @@ public struct CameraMainView: View {
         let focus = AIFocusController(cameraEngine: cameraEngine, trackingManager: trackingManager)
         self.focusController = focus
         
-        cameraEngine.onFrameReceived = { [weak trackingManager] pixelBuffer in
+        cinematicEngine.onMaskGenerated = { [weak metalRenderer] maskBuffer in
+            metalRenderer?.updateMaskBuffer(maskBuffer)
+        }
+        
+        cameraEngine.onFrameReceived = { [weak trackingManager, weak cinematicEngine] pixelBuffer in
             trackingManager?.processFrame(pixelBuffer)
+            cinematicEngine?.processFrame(pixelBuffer)
         }
         
         cameraEngine.requestPermissionsAndConfigure { granted in
@@ -155,13 +203,35 @@ public struct CameraMainView: View {
         }
     }
     
+    // MARK: - Mode Change Handler
+    private func handleModeChange(_ mode: CameraMode) {
+        switch mode {
+        case .photo:
+            cinematicEngine.isCinematicEnabled = false
+            cameraEngine.isProRAWEnabled = false
+        case .video:
+            cinematicEngine.isCinematicEnabled = false
+        case .cinematic:
+            cinematicEngine.isCinematicEnabled = true
+            cinematicEngine.setAperture(2.8)
+            metalRenderer?.cinematicBlurRadius = cinematicEngine.blurRadius
+        case .portrait:
+            cinematicEngine.isCinematicEnabled = true
+            cinematicEngine.setAperture(2.0)
+            metalRenderer?.cinematicBlurRadius = cinematicEngine.blurRadius
+        case .proRaw:
+            cameraEngine.isProRAWEnabled = true
+            cinematicEngine.isCinematicEnabled = false
+        }
+    }
+    
     // MARK: - Shutter Action & Animation
     private func handleShutterTap() {
-        withAnimation(.easeOut(duration: 0.12)) {
+        withAnimation(.easeOut(duration: 0.10)) {
             showFlashAnimation = true
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
-            withAnimation(.easeIn(duration: 0.15)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.10) {
+            withAnimation(.easeIn(duration: 0.12)) {
                 showFlashAnimation = false
             }
         }
@@ -207,7 +277,7 @@ public struct CameraGridView: View {
                 path.move(to: CGPoint(x: 0, y: 2 * h / 3.0))
                 path.addLine(to: CGPoint(x: w, y: 2 * h / 3.0))
             }
-            .stroke(Color.white.opacity(0.3), lineWidth: 0.75)
+            .stroke(Color.white.opacity(0.25), lineWidth: 0.75)
         }
     }
 }
@@ -220,7 +290,7 @@ public struct ManualFocusReticleView: View {
         ZStack {
             Rectangle()
                 .stroke(Color.yellow, lineWidth: 1.5)
-                .frame(width: 70, height: 70)
+                .frame(width: 68, height: 68)
             
             Circle()
                 .fill(Color.yellow)

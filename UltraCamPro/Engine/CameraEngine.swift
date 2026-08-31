@@ -9,6 +9,16 @@ public enum CameraPosition {
     case front
 }
 
+public enum CameraMode: String, CaseIterable, Identifiable {
+    case photo = "PHOTO"
+    case video = "VIDEO"
+    case cinematic = "CINEMATIC"
+    case portrait = "PORTRAIT"
+    case proRaw = "PRO RAW"
+    
+    public var id: String { rawValue }
+}
+
 public enum FlashMode {
     case off
     case on
@@ -56,6 +66,7 @@ public final class CameraEngine: NSObject, ObservableObject {
     @Published public var isSessionRunning: Bool = false
     @Published public var currentZoomFactor: CGFloat = 1.0
     @Published public var isRecordingVideo: Bool = false
+    @Published public var currentMode: CameraMode = .photo
     @Published public var flashMode: FlashMode = .auto
     @Published public var isLivePhotoEnabled: Bool = false
     @Published public var isProRAWEnabled: Bool = false
@@ -200,6 +211,16 @@ public final class CameraEngine: NSObject, ObservableObject {
             session.addOutput(videoDataOutput)
         }
         
+        // CRITICAL FIX: Lock connection to portrait orientation and handle front camera mirror
+        if let videoConnection = videoDataOutput.connection(with: .video) {
+            if videoConnection.isVideoOrientationSupported {
+                videoConnection.videoOrientation = .portrait
+            }
+            if videoConnection.isVideoMirroringSupported {
+                videoConnection.isVideoMirrored = (cameraPosition == .front)
+            }
+        }
+        
         // Photo Output with ProRAW & High Quality
         photoOutput.maxPhotoQualityPrioritization = .quality
         if session.canAddOutput(photoOutput) {
@@ -209,11 +230,29 @@ public final class CameraEngine: NSObject, ObservableObject {
             }
         }
         
+        if let photoConnection = photoOutput.connection(with: .video) {
+            if photoConnection.isVideoOrientationSupported {
+                photoConnection.videoOrientation = .portrait
+            }
+            if photoConnection.isVideoMirroringSupported {
+                photoConnection.isVideoMirrored = (cameraPosition == .front)
+            }
+        }
+        
         // Movie File Output for 4K Video Recording
         let movieOutput = AVCaptureMovieFileOutput()
         if session.canAddOutput(movieOutput) {
             session.addOutput(movieOutput)
             self.movieFileOutput = movieOutput
+        }
+        
+        if let movieConnection = movieFileOutput?.connection(with: .video) {
+            if movieConnection.isVideoOrientationSupported {
+                movieConnection.videoOrientation = .portrait
+            }
+            if movieConnection.isVideoMirroringSupported {
+                movieConnection.isVideoMirrored = (cameraPosition == .front)
+            }
         }
         
         // Configure Frame Rate (e.g. 60fps)
@@ -246,7 +285,6 @@ public final class CameraEngine: NSObject, ObservableObject {
                 device.activeVideoMaxFrameDuration = targetDuration
             }
             
-            // Enable Low Light Boost if available
             if device.isLowLightBoostSupported {
                 device.automaticallyEnablesLowLightBoostWhenAvailable = true
             }
@@ -295,7 +333,6 @@ public final class CameraEngine: NSObject, ObservableObject {
                         device.videoZoomFactor = hardwareZoom
                     }
                 } else {
-                    // Zoom factor < 1.0: Hardware stays at 1.0x, Metal shader applies Barrel Distortion & FOV expansion
                     if device.videoZoomFactor != 1.0 {
                         if animated {
                             device.ramp(toVideoZoomFactor: 1.0, withRate: 8.0)
@@ -318,7 +355,6 @@ public final class CameraEngine: NSObject, ObservableObject {
             guard let self = self else { return }
             self.session.stopRunning()
             
-            // Remove existing inputs
             if let currentInput = self.videoInput {
                 self.session.removeInput(currentInput)
             }
@@ -326,7 +362,6 @@ public final class CameraEngine: NSObject, ObservableObject {
                 self.session.removeInput(currentAudio)
             }
             
-            // Remove outputs
             self.session.removeOutput(self.videoDataOutput)
             self.session.removeOutput(self.photoOutput)
             if let movieOut = self.movieFileOutput {
@@ -343,8 +378,9 @@ public final class CameraEngine: NSObject, ObservableObject {
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
             
-            // If currently at 0.5x simulated ultra-wide zoom, capture rendered Metal frame
-            if self.currentZoomFactor < 1.0, let renderer = self.metalRenderer, let lastBuffer = self.latestPixelBuffer {
+            // If active 0.5x Ultra-Wide, or LUT applied, render through Metal pipeline
+            if (self.currentZoomFactor < 1.0 || (self.metalRenderer?.lutPresetIndex ?? 0) > 0),
+               let renderer = self.metalRenderer, let lastBuffer = self.latestPixelBuffer {
                 if let processedImage = renderer.renderProcessedImage(from: lastBuffer) {
                     self.saveImageToPhotoLibrary(processedImage)
                     DispatchQueue.main.async {
@@ -406,7 +442,7 @@ public final class CameraEngine: NSObject, ObservableObject {
                 }
                 device.unlockForConfiguration()
             } catch {
-                // Focus lock skipped
+                // Skip
             }
         }
     }
@@ -414,7 +450,7 @@ public final class CameraEngine: NSObject, ObservableObject {
     // Cache for latest buffer
     private var latestPixelBuffer: CVPixelBuffer?
     
-    private func saveImageToPhotoLibrary(_ image: UIImage) {
+    public func saveImageToPhotoLibrary(_ image: UIImage) {
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAsset(from: image)
         }) { success, error in

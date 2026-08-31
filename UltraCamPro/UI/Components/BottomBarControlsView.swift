@@ -27,12 +27,12 @@ public struct BottomBarControlsView: View {
                 onOpenGallery()
             }) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.white.opacity(0.15))
-                        .frame(width: 52, height: 52)
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.white.opacity(0.12))
+                        .frame(width: 54, height: 54)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.white.opacity(0.4), lineWidth: 1.5)
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.white.opacity(0.35), lineWidth: 1.5)
                         )
                     
                     if let thumb = cameraEngine.lastCapturedThumbnail {
@@ -40,19 +40,20 @@ public struct BottomBarControlsView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: 50, height: 50)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     } else {
-                        Image(systemName: "photo.on.rectangle")
+                        Image(systemName: "photo.on.rectangle.angled")
                             .font(.system(size: 22))
-                            .foregroundColor(.white.opacity(0.8))
+                            .foregroundColor(.white.opacity(0.85))
                     }
                 }
             }
-            .frame(width: 70)
+            .buttonStyle(PlainButtonStyle())
+            .frame(width: 72)
             
             Spacer()
             
-            // MARK: - Center: Shutter Button (Photo / QuickTake Video)
+            // MARK: - Center: Native Apple Style Shutter Button
             shutterButtonView
             
             Spacer()
@@ -67,8 +68,8 @@ public struct BottomBarControlsView: View {
             }) {
                 ZStack {
                     Circle()
-                        .fill(Color.white.opacity(0.15))
-                        .frame(width: 52, height: 52)
+                        .fill(Color.white.opacity(0.12))
+                        .frame(width: 54, height: 54)
                     
                     Image(systemName: "camera.rotate.fill")
                         .font(.system(size: 22, weight: .semibold))
@@ -76,56 +77,47 @@ public struct BottomBarControlsView: View {
                         .rotationEffect(.degrees(flipRotation))
                 }
             }
-            .frame(width: 70)
+            .buttonStyle(PlainButtonStyle())
+            .frame(width: 72)
         }
         .padding(.horizontal, 24)
-        .padding(.bottom, 24)
-        .frame(height: 110)
-        .background(Color.black.opacity(0.95))
+        .padding(.bottom, 20)
+        .frame(height: 100)
     }
     
     // MARK: - Shutter Button View
     private var shutterButtonView: some View {
-        ZStack {
-            // Outer Ring
-            Circle()
-                .stroke(Color.white, lineWidth: 4.5)
-                .frame(width: 78, height: 78)
-            
+        Button(action: {
+            HapticManager.shared.triggerShutterPress()
             if cameraEngine.isRecordingVideo {
-                // Recording State: Red Rounded Square
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.red)
-                    .frame(width: 32, height: 32)
-                    .transition(.scale)
+                cameraEngine.stopVideoRecording()
             } else {
-                // Photo State: White Solid Circle
+                onShutterTap()
+            }
+        }) {
+            ZStack {
+                // Outer White Ring
                 Circle()
-                    .fill(Color.white)
-                    .frame(width: 64, height: 64)
-                    .scaleEffect(isShutterPressed ? 0.88 : 1.0)
+                    .stroke(Color.white, lineWidth: 4.5)
+                    .frame(width: 78, height: 78)
+                
+                if cameraEngine.isRecordingVideo {
+                    // Recording State: Red Rounded Square
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.red)
+                        .frame(width: 32, height: 32)
+                } else {
+                    // Photo State: Inner Solid White Circle
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width: 64, height: 64)
+                        .scaleEffect(isShutterPressed ? 0.88 : 1.0)
+                }
             }
         }
-        .contentShape(Circle())
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    if !isShutterPressed {
-                        isShutterPressed = true
-                        HapticManager.shared.triggerShutterPress()
-                    }
-                }
-                .onEnded { _ in
-                    isShutterPressed = false
-                    if cameraEngine.isRecordingVideo {
-                        cameraEngine.stopVideoRecording()
-                    } else {
-                        onShutterTap()
-                    }
-                }
-        )
+        .buttonStyle(PlainButtonStyle())
         .simultaneousGesture(
-            LongPressGesture(minimumDuration: 0.5)
+            LongPressGesture(minimumDuration: 0.4)
                 .onEnded { _ in
                     HapticManager.shared.triggerRigidSnap()
                     cameraEngine.startVideoRecording()
