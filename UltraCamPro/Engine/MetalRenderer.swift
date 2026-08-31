@@ -243,7 +243,7 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
         renderPassDescriptor.colorAttachments[0].texture = outputTexture
         renderPassDescriptor.colorAttachments[0].loadAction = .clear
         renderPassDescriptor.colorAttachments[0].storeAction = .store
-        renderPassDescriptor.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
+        renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
         
         guard let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderPassDescriptor) else { return nil }
         
