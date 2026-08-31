@@ -66,8 +66,8 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
     // MARK: - Shader Parameters
     public var zoomFactor: Float = 1.0
     public var distortionStrength: Float = 0.45
-    public var k1: Float = -0.32
-    public var k2: Float = 0.12
+    public var k1: Float = 0.35
+    public var k2: Float = 0.15
     public var vignetteIntensity: Float = 0.35
     public var chromaticAberration: Float = 0.003
     
@@ -152,9 +152,16 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
         frameLock.unlock()
     }
     
+    public func resetCinematicState() {
+        frameLock.lock()
+        self.currentMaskBuffer = nil
+        self.cinematicBlurRadius = 0.0
+        frameLock.unlock()
+    }
+    
     // MARK: - MTKViewDelegate
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        // View resized
+        // Resized
     }
     
     public func draw(in view: MTKView) {
@@ -164,6 +171,8 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
             return
         }
         let maskBuffer = currentMaskBuffer
+        let blurRadius = self.cinematicBlurRadius
+        
         CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
         defer {
             CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
@@ -205,9 +214,9 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
         encoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         encoder.setFragmentTexture(inputTexture, index: 0)
         
-        // Bind Segmentation Mask Texture (if available)
+        // Bind Segmentation Mask Texture (only if valid)
         var hasMask: Int32 = 0
-        if let maskBuf = maskBuffer {
+        if let maskBuf = maskBuffer, blurRadius > 0.5 {
             var cvMaskTexture: CVMetalTexture?
             let maskWidth = CVPixelBufferGetWidth(maskBuf)
             let maskHeight = CVPixelBufferGetHeight(maskBuf)
@@ -240,7 +249,7 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
             chromaticAberration: self.chromaticAberration,
             lutPresetIndex: self.lutPresetIndex,
             lutIntensity: self.lutIntensity,
-            cinematicBlurRadius: self.cinematicBlurRadius,
+            cinematicBlurRadius: hasMask == 1 ? blurRadius : 0.0,
             hasSegmentationMask: hasMask
         )
         
@@ -314,7 +323,7 @@ public final class MetalRenderer: NSObject, MTKViewDelegate {
             chromaticAberration: self.chromaticAberration,
             lutPresetIndex: self.lutPresetIndex,
             lutIntensity: self.lutIntensity,
-            cinematicBlurRadius: self.cinematicBlurRadius,
+            cinematicBlurRadius: 0.0,
             hasSegmentationMask: 0
         )
         

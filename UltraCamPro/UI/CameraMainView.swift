@@ -193,7 +193,9 @@ public struct CameraMainView: View {
         
         cameraEngine.onFrameReceived = { [weak trackingManager, weak cinematicEngine] pixelBuffer in
             trackingManager?.processFrame(pixelBuffer)
-            cinematicEngine?.processFrame(pixelBuffer)
+            if cinematicEngine?.isCinematicEnabled == true {
+                cinematicEngine?.processFrame(pixelBuffer)
+            }
         }
         
         cameraEngine.requestPermissionsAndConfigure { granted in
@@ -203,14 +205,16 @@ public struct CameraMainView: View {
         }
     }
     
-    // MARK: - Mode Change Handler
+    // MARK: - Mode Change Handler with Clean State Reset
     private func handleModeChange(_ mode: CameraMode) {
         switch mode {
         case .photo:
             cinematicEngine.isCinematicEnabled = false
             cameraEngine.isProRAWEnabled = false
+            metalRenderer?.resetCinematicState()
         case .video:
             cinematicEngine.isCinematicEnabled = false
+            metalRenderer?.resetCinematicState()
         case .cinematic:
             cinematicEngine.isCinematicEnabled = true
             cinematicEngine.setAperture(2.8)
@@ -222,6 +226,7 @@ public struct CameraMainView: View {
         case .proRaw:
             cameraEngine.isProRAWEnabled = true
             cinematicEngine.isCinematicEnabled = false
+            metalRenderer?.resetCinematicState()
         }
     }
     

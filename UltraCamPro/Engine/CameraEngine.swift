@@ -146,14 +146,12 @@ public final class CameraEngine: NSObject, ObservableObject {
     private func configureSession() {
         session.beginConfiguration()
         
-        // Select optimal preset
         if session.canSetSessionPreset(currentResolution.sessionPreset) {
             session.sessionPreset = currentResolution.sessionPreset
         } else {
             session.sessionPreset = .photo
         }
         
-        // Setup Video Device
         let preferredPosition: AVCaptureDevice.Position = (cameraPosition == .back) ? .back : .front
         let deviceTypes: [AVCaptureDevice.DeviceType] = [
             .builtInTripleCamera,
@@ -187,7 +185,7 @@ public final class CameraEngine: NSObject, ObservableObject {
             print("[CameraEngine] Could not create video input: \(error)")
         }
         
-        // Audio Input for Video Recording
+        // Audio Input
         if let audioDevice = AVCaptureDevice.default(for: .audio) {
             do {
                 let audioInput = try AVCaptureDeviceInput(device: audioDevice)
@@ -211,15 +209,8 @@ public final class CameraEngine: NSObject, ObservableObject {
             session.addOutput(videoDataOutput)
         }
         
-        // CRITICAL FIX: Lock connection to portrait orientation and handle front camera mirror
-        if let videoConnection = videoDataOutput.connection(with: .video) {
-            if videoConnection.isVideoOrientationSupported {
-                videoConnection.videoOrientation = .portrait
-            }
-            if videoConnection.isVideoMirroringSupported {
-                videoConnection.isVideoMirrored = (cameraPosition == .front)
-            }
-        }
+        // Lock connection to portrait orientation
+        updateConnectionOrientations()
         
         // Photo Output with ProRAW & High Quality
         photoOutput.maxPhotoQualityPrioritization = .quality
@@ -230,15 +221,6 @@ public final class CameraEngine: NSObject, ObservableObject {
             }
         }
         
-        if let photoConnection = photoOutput.connection(with: .video) {
-            if photoConnection.isVideoOrientationSupported {
-                photoConnection.videoOrientation = .portrait
-            }
-            if photoConnection.isVideoMirroringSupported {
-                photoConnection.isVideoMirrored = (cameraPosition == .front)
-            }
-        }
-        
         // Movie File Output for 4K Video Recording
         let movieOutput = AVCaptureMovieFileOutput()
         if session.canAddOutput(movieOutput) {
@@ -246,19 +228,41 @@ public final class CameraEngine: NSObject, ObservableObject {
             self.movieFileOutput = movieOutput
         }
         
+        updateConnectionOrientations()
+        configureFrameRate(for: device, targetFPS: currentResolution.targetFPS)
+        
+        session.commitConfiguration()
+    }
+    
+    private func updateConnectionOrientations() {
+        let isFront = (cameraPosition == .front)
+        
+        if let videoConnection = videoDataOutput.connection(with: .video) {
+            if videoConnection.isVideoOrientationSupported {
+                videoConnection.videoOrientation = .portrait
+            }
+            if videoConnection.isVideoMirroringSupported {
+                videoConnection.isVideoMirrored = isFront
+            }
+        }
+        
+        if let photoConnection = photoOutput.connection(with: .video) {
+            if photoConnection.isVideoOrientationSupported {
+                photoConnection.videoOrientation = .portrait
+            }
+            if photoConnection.isVideoMirroringSupported {
+                photoConnection.isVideoMirrored = isFront
+            }
+        }
+        
         if let movieConnection = movieFileOutput?.connection(with: .video) {
             if movieConnection.isVideoOrientationSupported {
                 movieConnection.videoOrientation = .portrait
             }
             if movieConnection.isVideoMirroringSupported {
-                movieConnection.isVideoMirrored = (cameraPosition == .front)
+                movieConnection.isVideoMirrored = isFront
             }
         }
-        
-        // Configure Frame Rate (e.g. 60fps)
-        configureFrameRate(for: device, targetFPS: currentResolution.targetFPS)
-        
-        session.commitConfiguration()
     }
     
     private func configureFrameRate(for device: AVCaptureDevice, targetFPS: Double) {
@@ -348,28 +352,50 @@ public final class CameraEngine: NSObject, ObservableObject {
         }
     }
     
-    // MARK: - Switch Camera
+    // MARK: - Fast Zero-Lag Camera Flip (Bug 5 Fix)
     public func toggleCameraPosition() {
-        cameraPosition = (cameraPosition == .back) ? .front : .back
+        let newPosition: CameraPosition = (cameraPosition == .back) ? .front : .back
+        cameraPosition = newPosition
+        
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
-            self.session.stopRunning()
             
+            self.session.beginConfiguration()
+            
+            // Remove previous video input only
             if let currentInput = self.videoInput {
                 self.session.removeInput(currentInput)
             }
-            if let currentAudio = self.audioInput {
-                self.session.removeInput(currentAudio)
+            
+            let preferredPosition: AVCaptureDevice.Position = (newPosition == .back) ? .back : .front
+            let discovery = AVCaptureDevice.DiscoverySession(
+                deviceTypes: [.builtInWideAngleCamera],
+                mediaType: .video,
+                position: preferredPosition
+            )
+            
+            guard let newDevice = discovery.devices.first else {
+                self.session.commitConfiguration()
+                return
             }
             
-            self.session.removeOutput(self.videoDataOutput)
-            self.session.removeOutput(self.photoOutput)
-            if let movieOut = self.movieFileOutput {
-                self.session.removeOutput(movieOut)
+            self.videoDevice = newDevice
+            
+            do {
+                let newInput = try AVCaptureDeviceInput(device: newDevice)
+                if self.session.canAddInput(newInput) {
+                    self.session.addInput(newInput)
+                    self.videoInput = newInput
+                }
+            } catch {
+                print("[CameraEngine] Failed to switch camera input: \(error)")
             }
             
-            self.configureSession()
-            self.startSession()
+            // Fast orientation & mirror update
+            self.updateConnectionOrientations()
+            self.configureFrameRate(for: newDevice, targetFPS: self.currentResolution.targetFPS)
+            
+            self.session.commitConfiguration()
         }
     }
     
@@ -378,7 +404,6 @@ public final class CameraEngine: NSObject, ObservableObject {
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
             
-            // If active 0.5x Ultra-Wide, or LUT applied, render through Metal pipeline
             if (self.currentZoomFactor < 1.0 || (self.metalRenderer?.lutPresetIndex ?? 0) > 0),
                let renderer = self.metalRenderer, let lastBuffer = self.latestPixelBuffer {
                 if let processedImage = renderer.renderProcessedImage(from: lastBuffer) {
@@ -391,7 +416,6 @@ public final class CameraEngine: NSObject, ObservableObject {
                 }
             }
             
-            // Standard / ProRAW Capture via AVCapturePhotoOutput
             var photoSettings: AVCapturePhotoSettings
             if self.isProRAWEnabled && self.photoOutput.availableRawPhotoPixelFormatTypes.contains(kCVPixelFormatType_14Bayer_RGGB) {
                 photoSettings = AVCapturePhotoSettings(rawPixelFormatType: kCVPixelFormatType_14Bayer_RGGB, processedFormat: [AVVideoCodecKey: AVVideoCodecType.hevc])
